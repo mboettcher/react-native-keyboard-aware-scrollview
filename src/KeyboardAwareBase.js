@@ -158,11 +158,16 @@ export default class KeyboardAwareBase extends Component {
       this._keyboardAwareView.contentOffset &&
       this._keyboardAwareView.contentOffset.y !== undefined;
     const yOffset = hasYOffset
-      ? Math.max(this._keyboardAwareView.contentOffset.y - keyboardHeight, 0)
+      ? Math.max(
+          this._keyboardAwareView.contentOffset.y +
+            scrollToInputAdditionalOffset -
+            keyboardHeight,
+          0
+        )
       : 0;
     this._keyboardAwareView.scrollTo({
       x: 0,
-      y: yOffset + scrollToInputAdditionalOffset,
+      y: yOffset,
       animated: true
     });
   }
