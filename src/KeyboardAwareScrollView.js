@@ -1,32 +1,37 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React from "react";
+import PropTypes from "prop-types";
 
+import { ScrollView } from "react-native";
 
-import {
-  ScrollView
-} from 'react-native';
-
-import KeyboardAwareBase from './KeyboardAwareBase'
+import KeyboardAwareBase from "./KeyboardAwareBase";
 
 export default class KeyboardAwareScrollView extends KeyboardAwareBase {
   render() {
     return (
-      <ScrollView {...this.props} {...this.style}
-        contentInset={{bottom: this.state.keyboardHeight}}
-        ref={(r) => {
+      <ScrollView
+        {...this.props}
+        {...this.style}
+        contentInset={{ bottom: this.state.keyboardHeight }}
+        ref={r => {
           this._keyboardAwareView = r;
         }}
-        onLayout={(layoutEvent) => {
+        onLayout={layoutEvent => {
           this._onKeyboardAwareViewLayout(layoutEvent.nativeEvent.layout);
+          if (this.props.onLayout) {
+            this.props.onLayout(layoutEvent);
+          }
         }}
-        onScroll={(event) => {
+        onScroll={event => {
           this._onKeyboardAwareViewScroll(event.nativeEvent.contentOffset);
-          if(this.props.onScroll) {
+          if (this.props.onScroll) {
             this.props.onScroll(event);
           }
         }}
-        onContentSizeChange={() => {
+        onContentSizeChange={event => {
           this._updateKeyboardAwareViewContentSize();
+          if (this.props.onContentSizeChange) {
+            this.props.onContentSizeChange(event);
+          }
         }}
         scrollEventThrottle={200}
       />
@@ -36,7 +41,9 @@ export default class KeyboardAwareScrollView extends KeyboardAwareBase {
 
 KeyboardAwareScrollView.propTypes = {
   getTextInputRefs: PropTypes.func,
-  onScroll: PropTypes.func
+  onScroll: PropTypes.func,
+  onLayout: PropTypes.func,
+  onContentSizeChange: PropTypes.func
 };
 KeyboardAwareScrollView.defaultProps = {
   ...KeyboardAwareBase.defaultProps,
